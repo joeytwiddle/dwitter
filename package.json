@@ -5,7 +5,8 @@
   "scripts": {
     "css-fix": "css-beautify --replace --indent-size 2 --end-with-newline dwitter/static/*.css",
     "lint": "eslint dwitter/static/js/*.js",
-    "lint-fix": "eslint --fix dwitter/static/js/*.js"
+    "lint-fix": "eslint --fix dwitter/static/js/*.js",
+    "precommit": "npm run lint-fix && npm run css-fix"
   },
   "repository": {
     "type": "git",
