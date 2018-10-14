@@ -186,23 +186,28 @@ function registerStatsClickListeners(element) {
   var lastScrollTop = null;
   window.addEventListener('scroll', function() {
     var newScrollTop = $(this).scrollTop();
-    var header = $('.head-menu');
-    var newHiddenState = isHidden;
-    // Ignore scroll event when page is first loaded
-    if (lastScrollTop != null) {
-      // Do not scroll the header away immedately at the top of the page; that would look empty
-      // because there is nothing behind it!  (This value is #content padding-top minus 5)
-      if (newScrollTop > lastScrollTop && newScrollTop > 85) {
-        newHiddenState = true;
-      }
-      if (newScrollTop < lastScrollTop) {
-        newHiddenState = false;
-      }
-      if (newHiddenState !== isHidden) {
-        isHidden = newHiddenState;
-        header.toggleClass('hidden', isHidden);
-      }
+    var newHiddenState = getNewHiddenState(newScrollTop);
+    if (newHiddenState !== isHidden) {
+      isHidden = newHiddenState;
+      $('.head-menu').toggleClass('hidden', isHidden);
     }
     lastScrollTop = newScrollTop;
   });
+  function getNewHiddenState(newScrollTop) {
+    var currentHiddenState = isHidden;
+    // Ignore the first scroll event, because we don't have lastScrollTop yet
+    if (lastScrollTop == null) {
+      return currentHiddenState;
+    }
+    // Do not hide the header after scrolling only one pixel down from the top
+    // of the page; that would look empty because there is nothing behind it!
+    // Only hide after 85 pixels (this value is #content padding-top minus 5)
+    if (newScrollTop > lastScrollTop && newScrollTop > 85) {
+      return true;
+    }
+    if (newScrollTop < lastScrollTop) {
+      return false;
+    }
+    return currentHiddenState;
+  }
 }());
