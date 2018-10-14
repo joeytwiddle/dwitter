@@ -186,8 +186,8 @@ function registerStatsClickListeners(element) {
   var lastScrollTop = null;
   window.addEventListener('scroll', function() {
     var newScrollTop = $(this).scrollTop();
-    var newHiddenState = getNewHiddenState(isHidden, lastScrollTop, newScrollTop);
-    if (newHiddenState !== isHidden) {
+    var newHiddenState = getNewHiddenState(lastScrollTop, newScrollTop);
+    if (newHiddenState !== null && newHiddenState !== isHidden) {
       isHidden = newHiddenState;
       $('.head-menu').toggleClass('hidden', isHidden);
     }
@@ -195,10 +195,10 @@ function registerStatsClickListeners(element) {
   });
 }());
 
-function getNewHiddenState(currentHiddenState, lastScrollTop, newScrollTop) {
+function getNewHiddenState(lastScrollTop, newScrollTop) {
   // Ignore the first scroll event, because we don't have lastScrollTop yet
-  if (lastScrollTop == null) {
-    return currentHiddenState;
+  if (lastScrollTop === null) {
+    return null;
   }
   // Do not hide the header after scrolling only one pixel down from the top
   // of the page; that would look empty because there is nothing behind it!
@@ -209,5 +209,5 @@ function getNewHiddenState(currentHiddenState, lastScrollTop, newScrollTop) {
   if (newScrollTop < lastScrollTop) {
     return false;
   }
-  return currentHiddenState;
+  return null;
 }
